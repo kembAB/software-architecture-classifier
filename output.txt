@@ -1,0 +1,94 @@
+======================================================================
+ArchitectureScope - Software Architecture Style Classifier
+======================================================================
+
+Classifies a software system into one of six architecture
+styles from eight measurable structural features, using a
+k-nearest-neighbours classifier with k = 3.
+
+----------------------------------------------------------------------
+DATASET
+----------------------------------------------------------------------
+36 labelled example systems, 6 per style.
+Styles: Client-Server, Event-Driven, Layered, Microservices, Monolith, Pipe-and-Filter
+Every system is measured on the same eight features:
+  1. deployment_units
+  2. independent_deployment
+  3. own_database_per_unit
+  4. async_communication_ratio
+  5. coupling_score
+  6. sequential_pipeline_flow
+  7. client_request_driven
+  8. team_autonomy
+
+----------------------------------------------------------------------
+EVALUATION - LEAVE-ONE-OUT CROSS-VALIDATION
+----------------------------------------------------------------------
+Each of the 36 systems was classified using the other 35 as
+the reference set, and the prediction was checked against
+the true style.
+
+Overall accuracy: 36/36 = 100.0%
+
+Per-style results:
+  Client-Server   6/6 correct
+  Event-Driven    6/6 correct
+  Layered         6/6 correct
+  Microservices   6/6 correct
+  Monolith        6/6 correct
+  Pipe-and-Filter 6/6 correct
+
+Misclassifications: none. Every system was matched to
+its true style by its three nearest neighbours.
+
+----------------------------------------------------------------------
+DEMO - FIVE NEW SYSTEMS CLASSIFIED LIVE
+----------------------------------------------------------------------
+None of these systems is in the dataset. Each one is
+classified against all 36 labelled examples.
+
+1. Harbour Books online store
+   A small online bookstore built and deployed as one single application with one shared database.
+   Features: deployment_units=1, independent_deployment=0.00, own_database_per_unit=0, async_communication_ratio=0.00, coupling_score=8, sequential_pipeline_flow=0, client_request_driven=1, team_autonomy=2
+   Predicted style: Monolith
+   Nearest neighbours:
+      - Hotel booking application                  Monolith        distance 0.100
+      - ClinicDesk records application             Monolith        distance 0.111
+      - University course portal                   Monolith        distance 0.111
+
+2. Continental Bank service platform
+   A banking platform of thirty independently deployed services, each owning its database, mixing direct calls with messaging.
+   Features: deployment_units=30, independent_deployment=0.95, own_database_per_unit=1, async_communication_ratio=0.45, coupling_score=3, sequential_pipeline_flow=0, client_request_driven=1, team_autonomy=9
+   Predicted style: Microservices
+   Nearest neighbours:
+      - E-commerce platform of 24 services         Microservices   distance 0.169
+      - Ride-hailing backend services              Microservices   distance 0.215
+      - Food delivery platform services            Microservices   distance 0.229
+
+3. Factory telemetry monitoring system
+   Sensors publish events to a backbone where independent processors react to them.
+   Features: deployment_units=18, independent_deployment=0.90, own_database_per_unit=1, async_communication_ratio=0.95, coupling_score=2, sequential_pipeline_flow=0, client_request_driven=0, team_autonomy=8
+   Predicted style: Event-Driven
+   Nearest neighbours:
+      - IoT sensor event backbone                  Event-Driven    distance 0.051
+      - Social notification event system           Event-Driven    distance 0.218
+      - Fraud detection event platform             Event-Driven    distance 0.220
+
+4. PhotoLab enhancement tool
+   A photo tool that chains resize, denoise, colour correction and export stages in sequence.
+   Features: deployment_units=5, independent_deployment=0.75, own_database_per_unit=0, async_communication_ratio=0.45, coupling_score=3, sequential_pipeline_flow=1, client_request_driven=0, team_autonomy=5
+   Predicted style: Pipe-and-Filter
+   Nearest neighbours:
+      - Image processing filter chain              Pipe-and-Filter distance 0.071
+      - Video transcoding pipeline                 Pipe-and-Filter distance 0.218
+      - Audio mastering filter stages              Pipe-and-Filter distance 0.223
+
+5. Dental clinic reception system
+   Reception desktops at several clinics all talk to one central server holding the records.
+   Features: deployment_units=6, independent_deployment=0.40, own_database_per_unit=0, async_communication_ratio=0.10, coupling_score=4, sequential_pipeline_flow=0, client_request_driven=1, team_autonomy=3
+   Predicted style: Client-Server
+   Nearest neighbours:
+      - Point-of-sale terminals with store server  Client-Server   distance 0.111
+      - Library catalogue terminals                Client-Server   distance 0.115
+      - Email system with desktop clients          Client-Server   distance 0.158
+
